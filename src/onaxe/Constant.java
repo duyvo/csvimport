@@ -1,5 +1,7 @@
 package onaxe;
 
+import org.apache.log4j.Logger;
+
 public class Constant {
 	public static final String PERDUE = "Perdue";	
 	public static final String REMPLACEE = "Remplacée";	
@@ -18,4 +20,14 @@ public class Constant {
 	public static final int PAST = -1;	
 	public static final int INVALID = -1000;	
 
+	static Logger logger = Logger.getRootLogger();	
+	
+	public static void write2Log(String msg) {
+		System.out.println(msg);
+		logger.info(msg);		
+	}
+	public static void write2LogError(String msg) {
+		System.out.println("ERROR: " + msg);
+		logger.error("ERROR: " + msg);
+	}
 }

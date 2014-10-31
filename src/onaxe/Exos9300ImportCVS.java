@@ -17,40 +17,52 @@ public class Exos9300ImportCVS{
 		logger.info("=========================================================================");
 		logger.info("------------------------------------------------------------------------");
 		logger.info("");
-		logger.info(":::::: Execution started at: " + d.toString());
+		Constant.write2Log(":::::: Execution started at: " + d.toString());
 		logger.info("");
 		logger.info("------------------------------------------------------------------------");
-		System.out.println(":::::: Execution started at: " + d.toString());
 		
 		configData.doReadConfig("conf.xml");
 		try {
-				
 			// Connect to FTP
 			ConnectFTP connFTP=new ConnectFTP();
-			if (connFTP.connectAndDownload()) {
-				System.out.println("\nDownloaded file from FTP server successfully ...");				
-				ReadCSV readCSV=new ReadCSV(); 
-				if (readCSV.getCSVFiles()){
-					logger.info("\nStart to process data from the CSV file into the Exos9300 database......");
-					System.out.println("\nStart to process data from the CSV into Exos9300........\n");
-//					readCSV.processCSV2DB();
-				} else {
-					logger.info("Cannot read file or no data to be processed");
-					System.out.println("Cannot read file or no data to be processed");
+			
+			if (args.length == 0 || args[0].compareTo("import") == 0) {
+				if (connFTP.connectAndDownload()) {
+					Constant.write2Log("\nDownloaded file from FTP server successfully ...");				
+					ReadCSV readCSV=new ReadCSV(); 
+					if (readCSV.getCSVFiles()){
+						Constant.write2Log("\nStart to process data from the CSV file into the Exos9300 database......");
+						readCSV.processCSV2DB();
+					} else {
+						Constant.write2LogError("Cannot read file or no data to be processed");
+					}
 				}
+			} else if (args[0].compareTo("export") == 0) {
+				if (args.length == 2) {
+					try {
+						int month = Integer.parseInt(args[1]);
+						configData.setMonth(month);
+					} catch (Exception e) {
+					}
+				}
+				if (connFTP.connectAndUpload()) {
+					Constant.write2Log("\nUpload file to FTP server successfully ...");
+				} else {
+					Constant.write2LogError("\nError while uploading file to FTP server ...");
+				}
+				
 			}
 		} catch (Exception e) {
-			logger.error("An error occurred during the execution of Exos9300 Import CSV." + e);
+			Constant.write2Log("An error occurred during the execution of Exos9300 Import CSV." + e);
 		}
 		
 		d = new Date();
 		logger.info("------------------------------------------------------------------------");
 		logger.info("");
-		logger.info(":::::: Execution finished at: " + d.toString());
+		Constant.write2Log(":::::: Execution finished at: " + d.toString());
 		logger.info("");
 		logger.info("------------------------------------------------------------------------");
 		logger.info("=========================================================================");
 		logger.info("");
-		System.out.println("\n:::::: Execution finish at: " + d.toString());
   }
 }

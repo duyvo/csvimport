@@ -2,11 +2,16 @@ package onaxe;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.SocketException;
-import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -54,12 +59,12 @@ public class ConnectFTP {
 				if (aFile.isFile()) {
 					boolean success = downloadSingleFile(ftpClient, filePath, newDirPath);
 					if (success) {
-						System.out.println("Downloaded the file successfully: " + filePath);
-						logger.info("Downloaded the file successfully: " + filePath);
+						String msg = "Downloaded the file successfully: " + filePath;
+						Constant.write2Log(msg);
 						return true;
 					} else {
-						System.out.println("COULD NOT download the file: " + filePath);
-						logger.error("Could not download the file: " + filePath);
+						String msg = "Could not download the file: " + filePath;
+						Constant.write2LogError(msg);
 					}
 				}
 			}
@@ -73,7 +78,7 @@ public class ConnectFTP {
 		if (!fCheck.exists())
 			fCheck.mkdirs();
 
-		System.out.println("Connecting to the FTP server: " + configData.url + " for dowdloading the file " + configData.csvFileName);
+		Constant.write2Log("Connecting to the FTP server: " + configData.url + " for dowdloading the file " + configData.csvFileName);
 		int port = Integer.valueOf(configData.port);
 		FTPClient ftpClient = new FTPClient();
 
@@ -81,12 +86,12 @@ public class ConnectFTP {
 		while (true) {
 			try{
 				// connect and login to the server
-				logger.info("Trying to connect to the ftp server for downloading file ... counter = " + i);
+				Constant.write2Log("Trying to connect to the ftp server for downloading file ... counter = " + i);
 				ftpClient.connect(configData.url, port);
 				break;
 			} catch (Exception e) {
 				if (i == 6) {
-					logger.error("An error occurred during the execution of Exos9300 Import CSV." + e);
+					Constant.write2LogError("An error occurred during the execution of Exos9300 Import CSV." + e);
 					return false;
 				}
 				i++;
@@ -100,9 +105,96 @@ public class ConnectFTP {
 		ftpClient.logout();
 		ftpClient.disconnect();
 
-		logger.info("Disconnected from FTP server: " + configData.url);
-		System.out.println("Disconnected from FTP server: " + configData.url);
+		Constant.write2Log("Disconnected from FTP server: " + configData.url);
+		return result;
+	}
+
+	public boolean connectAndUpload() throws SocketException, IOException {
+		ConfigData configData = Exos9300ImportCVS.configData;
+		Constant.write2Log("Connecting to the FTP server: " + configData.url + " for uploading the statistic file.");
+		int port = Integer.valueOf(configData.port);
+		FTPClient ftpClient = new FTPClient();
+
+		int i = 1;
+		while (true) {
+			try{
+				// connect and login to the server
+				Constant.write2Log("Trying to connect to the ftp server for downloading file ... counter = " + i);
+				ftpClient.connect(configData.url, port);
+				break;
+			} catch (Exception e) {
+				if (i == 6) {
+					Constant.write2LogError("An error occurred during the execution of Exos9300 Import CSV." + e);
+					return false;
+				}
+				i++;
+			}
+		}
+		ftpClient.login(configData.ftpUser, configData.ftpPass);
+		boolean result = uploadFile(ftpClient);
+		
+		// log out and disconnect from the server
+		ftpClient.logout();
+		ftpClient.disconnect();
+
+		Constant.write2Log("Disconnected from FTP server: " + configData.url);
 		return result;
 	}
 	
+	
+	public boolean uploadFile(FTPClient ftpClient) throws IOException {
+		ConfigData configData = Exos9300ImportCVS.configData;		
+		String fileName = getUploadFileName();
+		String newDirPath = configData.pathStatLocal + File.separator + fileName;
+
+		File uploadFile = new File(newDirPath);
+		if (uploadFile.exists()) {
+			InputStream inputStream = new FileInputStream(uploadFile);
+			try {
+				Constant.write2Log("Start uploading file: " + fileName);
+				
+				String serverFilePath = configData.pathStatServer + "/" + fileName;
+				boolean done = ftpClient.storeFile(serverFilePath, inputStream);
+		        
+				Constant.write2Log("Finished uploading file to " + serverFilePath + " successfully!");
+				inputStream.close();
+				return done;
+			} catch (IOException ex) {
+				Constant.write2LogError("Sorry, there is a problem occurred during the uploading to ftp!" + ex);
+				throw ex;
+			}
+		} else {
+			Constant.write2LogError("Sorry, the given " + newDirPath + " file does not exist!");
+		}
+		return false;
+	}
+
+	private String getUploadFileName() {
+		Date today = new Date();  
+		ConfigData configData = Exos9300ImportCVS.configData;
+		
+		Calendar calendar = Calendar.getInstance();  
+		calendar.setTime(today);
+
+		// Get the month of today, or if given from the parameter
+		int month = calendar.get(Calendar.MONTH) - 1;		
+		if (configData.month != -1) {
+			month = configData.month;
+		}
+		// Get the first day of the given month
+		calendar.set(Calendar.DAY_OF_MONTH, 1);  
+		calendar.set(Calendar.MONTH, month);
+		Date firstDayOfMonth = calendar.getTime();
+
+		// Get the last day of the given month
+		int lastDate = calendar.getActualMaximum(Calendar.DATE);
+	    calendar.set(Calendar.DATE, lastDate); 
+		Date lastDayOfMonth = calendar.getTime();
+
+		DateFormat sdf = new SimpleDateFormat("yyyyMMdd");  
+		String firstDay = sdf.format(firstDayOfMonth);
+		String strLastDay = sdf.format(lastDayOfMonth);
+		// Format: Transactions_20140901_20140930.csv
+		return "Transactions_" + firstDay + "_" + strLastDay + ".csv";
+	}
 }

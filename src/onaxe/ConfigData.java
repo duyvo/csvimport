@@ -2,9 +2,6 @@ package onaxe;
 
 import java.io.File;
 
-
-
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -16,9 +13,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class ConfigData {
-	public String url,ftpUser,ftpPass,port,pathServer,csvFileName,statFileName,lastCsvFileName,pathLocal,jdbc,sqlUser,sqlPass;
+	public String url,ftpUser,ftpPass,port,pathServer,pathStatServer,csvFileName,lastCsvFileName,pathLocal,pathStatLocal,jdbc,sqlUser,sqlPass;
     public String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     public char separator = ';';
+    
+    public int month = -1;
 
 	public String logPath = "";
     
@@ -50,10 +49,11 @@ public class ConfigData {
 					
 					port=eElement.getElementsByTagName("port").item(0).getTextContent();
 					pathServer=eElement.getElementsByTagName("pathServer").item(0).getTextContent();
+					pathStatServer=eElement.getElementsByTagName("pathStatServer").item(0).getTextContent();
 					csvFileName=eElement.getElementsByTagName("csvFileName").item(0).getTextContent();
-					statFileName=eElement.getElementsByTagName("statFileName").item(0).getTextContent();
 					lastCsvFileName=eElement.getElementsByTagName("lastCsvFileName").item(0).getTextContent();
 					pathLocal=eElement.getElementsByTagName("pathLocal").item(0).getTextContent();
+					pathStatLocal=eElement.getElementsByTagName("pathStatLocal").item(0).getTextContent();
 					
 					logPath = eElement.getElementsByTagName("pathLog").item(0).getTextContent();
 				}
@@ -72,11 +72,17 @@ public class ConfigData {
 					sqlPass = new String(Base64.decodeBase64(tempPass));
 				}
 			}
-			
-			logger.info("The config file has been loaded correctly");
+			Constant.write2Log("The config file has been loaded correctly");
 	    } catch (Exception e) {
 	    	e.printStackTrace();
-			logger.info("Problem while loading the config file", e);
+	    	Constant.write2LogError("Problem while loading the config file" + e);
 	    }
 	  }
+
+	public void setMonth(int month) {
+		if (month < 12 && month >= 0)
+			this.month = month;
+		else
+			Constant.write2LogError("The given month " + month + " is not valid! must be in 0..11. The current date will be used.");
+	}
 }

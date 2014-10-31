@@ -5,10 +5,11 @@
 		<ftpPass>UGFzc3dvcmQx</ftpPass>
 		<port>21</port>
 		<pathServer>/data/DataUpdate</pathServer>
+		<pathStatServer>/data/DataTransaction</pathStatServer>
 		<csvFileName>cartes.csv</csvFileName>
-		<statFileName>stat.csv</statFileName>
 		<lastCsvFileName>oldcartes.csv</lastCsvFileName>
-		<pathLocal>C:/</pathLocal>		
+		<pathLocal>C:/</pathLocal>
+		<pathStatLocal>C:/data</pathStatLocal>		
 		<pathLog>C:/data/logs</pathLog>
 	</ftp>
 	<sql>
