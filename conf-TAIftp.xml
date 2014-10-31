@@ -1,0 +1,16 @@
+<config>
+	<ftp>
+		<url>www.taivoduc.com</url>
+		<ftpUser>u76935011-csv</ftpUser>
+		<ftpPass>UGFzc3dvcmQx</ftpPass>
+		<port>21</port>
+		<pathServer>/data/DataUpdate</pathServer>
+		<pathLocal>C:/</pathLocal>		
+		<pathLog>C:/logs</pathLog>
+	</ftp>
+	<sql>
+		<jdbc>jdbc:sqlserver://SVCTAG-HBR093J</jdbc>
+		<sqlUser>Exos9300</sqlUser>
+		<sqlPass>Exos9300</sqlPass>
+	</sql>
+</config>

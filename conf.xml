@@ -1,0 +1,61 @@
+<config>
+	<ftp>
+		<url>www.taivoduc.com</url>
+		<ftpUser>u76935011-csv</ftpUser>
+		<ftpPass>UGFzc3dvcmQx</ftpPass>
+		<port>21</port>
+		<pathServer>/data/DataUpdate</pathServer>
+		<csvFileName>cartes.csv</csvFileName>
+		<statFileName>stat.csv</statFileName>
+		<lastCsvFileName>oldcartes.csv</lastCsvFileName>
+		<pathLocal>C:/</pathLocal>		
+		<pathLog>C:/data/logs</pathLog>
+	</ftp>
+	<sql>
+		<jdbc>jdbc:sqlserver://dvo\sqlexpress</jdbc>
+		<sqlUser>Exos9300</sqlUser>
+		<sqlPass>RXhvczkzMDA=</sqlPass>
+	</sql>
+</config>
+
+<!--
+<config>
+	<ftp>
+		<url>www.onaxe.ch</url>
+		<ftpUser>st5888</ftpUser>
+		<ftpPass>YlRybTQ4Q2tWMw==</ftpPass>
+		<port>21</port>
+		<pathServer>/data/DataUpdate</pathServer>
+		<csvFileName>cartes-perdue.csv</csvFileName>
+		<oldCsvFileName>oldcartes.csv</oldCsvFileName>
+		<pathLocal>C:/</pathLocal>
+		<pathLog>C:/data/logs</pathLog>
+	</ftp>
+	<sql>
+		<jdbc>jdbc:sqlserver://SVCTAG-HBR093J</jdbc>
+		<sqlUser>Exos9300</sqlUser>
+		<sqlPass>RXhvczkzMDA=</sqlPass>
+	</sql>
+</config>
+
+
+<config>
+	<ftp>
+		<url>www.taivoduc.com</url>
+		<ftpUser>u76935011-csv</ftpUser>
+		<ftpPass>UGFzc3dvcmQx</ftpPass>
+		<port>21</port>
+		<pathServer>/data/DataUpdate</pathServer>
+		<csvFileName>cartes-perdue.csv</csvFileName>
+		<oldCsvFileName>oldcartes.csv</oldCsvFileName>
+		<pathLocal>C:/</pathLocal>		
+		<pathLog>C:/data/logs</pathLog>
+	</ftp>
+	<sql>
+		<jdbc>jdbc:sqlserver://smrx-pc\sqlexpress</jdbc>
+		<sqlUser>Exos9300</sqlUser>
+		<sqlPass>RXhvczkzMDA=</sqlPass>
+	</sql>
+</config>
+
+-->
