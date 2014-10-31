@@ -131,6 +131,7 @@ public class ConnectFTP {
 			}
 		}
 		ftpClient.login(configData.ftpUser, configData.ftpPass);
+		ftpClient.enterLocalPassiveMode();
 		boolean result = uploadFile(ftpClient);
 		
 		// log out and disconnect from the server
@@ -151,12 +152,12 @@ public class ConnectFTP {
 		if (uploadFile.exists()) {
 			InputStream inputStream = new FileInputStream(uploadFile);
 			try {
-				Constant.write2Log("Start uploading file: " + fileName);
+				Constant.write2Log("File exists. Start uploading file: " + newDirPath);
 				
 				String serverFilePath = configData.pathStatServer + "/" + fileName;
 				boolean done = ftpClient.storeFile(serverFilePath, inputStream);
 		        
-				Constant.write2Log("Finished uploading file to " + serverFilePath + " successfully!");
+				Constant.write2Log("Finished uploading file to " + serverFilePath + " Status = " + ftpClient.getReplyString());
 				inputStream.close();
 				return done;
 			} catch (IOException ex) {

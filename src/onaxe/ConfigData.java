@@ -13,7 +13,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class ConfigData {
-	public String url,ftpUser,ftpPass,port,pathServer,pathStatServer,csvFileName,lastCsvFileName,pathLocal,pathStatLocal,jdbc,sqlUser,sqlPass;
+	public String url,ftpUser,ftpPass,port,pathServer,pathStatServer,csvFileName,pathLocal,pathStatLocal,jdbc,sqlUser,sqlPass;
     public String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
     public char separator = ';';
     
@@ -51,7 +51,6 @@ public class ConfigData {
 					pathServer=eElement.getElementsByTagName("pathServer").item(0).getTextContent();
 					pathStatServer=eElement.getElementsByTagName("pathStatServer").item(0).getTextContent();
 					csvFileName=eElement.getElementsByTagName("csvFileName").item(0).getTextContent();
-					lastCsvFileName=eElement.getElementsByTagName("lastCsvFileName").item(0).getTextContent();
 					pathLocal=eElement.getElementsByTagName("pathLocal").item(0).getTextContent();
 					pathStatLocal=eElement.getElementsByTagName("pathStatLocal").item(0).getTextContent();
 					

@@ -7,7 +7,6 @@
 		<pathServer>/data/DataUpdate</pathServer>
 		<pathStatServer>/data/DataTransaction</pathStatServer>
 		<csvFileName>cartes.csv</csvFileName>
-		<lastCsvFileName>oldcartes.csv</lastCsvFileName>
 		<pathLocal>C:/</pathLocal>
 		<pathStatLocal>C:/data</pathStatLocal>		
 		<pathLog>C:/data/logs</pathLog>
